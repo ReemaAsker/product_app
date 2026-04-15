@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/product/bloc/product_cubit.dart';
 import 'package:shop_app/features/product/bloc/product_state.dart';
 import 'package:shop_app/features/product/data/product.dart';
@@ -31,7 +32,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           }
 
           if (state is ProductError) {
-            return Center(child: Text(state.message));
+            return DefaultWidget(text: state.message);
           }
           if (state is ProductSuccess) {
             return ListView.builder(
@@ -47,7 +48,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               },
             );
           }
-          return SizedBox();
+          return DefaultWidget(text: "Something went wrong");
         },
       ),
     );

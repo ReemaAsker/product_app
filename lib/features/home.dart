@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/category/bloc/category_cubit.dart';
 import 'package:shop_app/features/category/bloc/category_state.dart';
 import 'package:shop_app/features/category/screens/widgets/category_card.dart';
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             if (state is CategoryError) {
-              return Center(child: Text(state.message));
+              return DefaultWidget(text: state.message);
             }
 
             if (state is CategorySuccess) {
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            return SizedBox();
+            return DefaultWidget(text: "Something went wrong");
           },
         ),
       ),
