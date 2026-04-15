@@ -4,6 +4,7 @@ import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/product/bloc/product_cubit.dart';
 import 'package:shop_app/features/product/bloc/product_state.dart';
 import 'package:shop_app/features/product/data/product.dart';
+import 'package:shop_app/features/product/screens/widgets/product_card.dart';
 
 class ProductsScreen extends StatefulWidget {
   final String categoreySlug;
@@ -35,16 +36,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
             return DefaultWidget(text: state.message);
           }
           if (state is ProductSuccess) {
-            return ListView.builder(
+            return GridView.builder(
               itemCount: state.products.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
               itemBuilder: (context, index) {
                 Product product = state.products[index];
-                return ListTile(
-                  leading: Image.network(state.products[index].images![0]),
-                  title: Text(product.title ?? ""),
-                  subtitle: Text(product.description ?? ""),
-                  trailing: Text("${product.price ?? 0.0} \$"),
-                );
+                return ProductCard(product: product);
               },
             );
           }
