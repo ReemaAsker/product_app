@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/features/category/data/category.dart';
+import 'package:shop_app/features/product/screens/products_screen.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
@@ -9,8 +10,17 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductsScreen(categoreySlug: category.slug),
+          ),
+        );
+      },
       child: Container(
+        width: 100,
+
         decoration: BoxDecoration(
           color: Colors.orange.shade50,
           borderRadius: BorderRadius.circular(16),
@@ -29,7 +39,11 @@ class CategoryCard extends StatelessWidget {
             SizedBox(height: 10),
             Text(
               category.name,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
