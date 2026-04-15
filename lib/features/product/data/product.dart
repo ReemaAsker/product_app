@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 class Products {
   List<Product>? products;
   int? total;
@@ -21,16 +23,16 @@ class Products {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.products != null) {
-      data['products'] = this.products!.map((v) => v.toJson()).toList();
+      data['products'] = products!.map((v) => v.toJson()).toList();
     }
-    data['total'] = this.total;
-    data['skip'] = this.skip;
-    data['limit'] = this.limit;
+    data['total'] = total;
+    data['skip'] = skip;
+    data['limit'] = limit;
     return data;
   }
 }
 
-class Product {
+class Product extends Equatable {
   int? id;
   String? title;
   String? description;
@@ -143,6 +145,9 @@ class Product {
     data['thumbnail'] = this.thumbnail;
     return data;
   }
+
+  @override
+  List<Object?> get props => [id];
 }
 
 class Dimensions {

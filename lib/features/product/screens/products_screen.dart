@@ -24,33 +24,56 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Products"), centerTitle: true),
+      appBar: AppBar(
+        title: Text("Products of ${widget.categoreySlug}"),
+        centerTitle: true,
+      ),
 
-      body: BlocBuilder<ProductCubit, ProductState>(
-        builder: (context, state) {
-          if (state is ProductLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
+            child: TextField(
+              onChanged: (value) =>
+                  context.read<ProductCubit>().searchOfProducts(value),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search),
 
-          if (state is ProductError) {
-            return DefaultWidget(text: state.message);
-          }
-          if (state is ProductSuccess) {
-            return GridView.builder(
-              itemCount: state.products.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
+                border: OutlineInputBorder(),
+                hintText: "Search",
               ),
-              itemBuilder: (context, index) {
-                Product product = state.products[index];
-                return ProductCard(product: product);
+            ),
+          ),
+          SizedBox(height: 40),
+          Expanded(
+            child: BlocBuilder<ProductCubit, ProductState>(
+              builder: (context, state) {
+                if (state is ProductLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (state is ProductError) {
+                  return DefaultWidget(text: state.message);
+                }
+                if (state is ProductSuccess) {
+                  return GridView.builder(
+                    itemCount: state.products.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemBuilder: (context, index) {
+                      Product product = state.products[index];
+                      return ProductCard(product: product);
+                    },
+                  );
+                }
+                return DefaultWidget(text: "Something went wrong");
               },
-            );
-          }
-          return DefaultWidget(text: "Something went wrong");
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
