@@ -55,7 +55,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 if (state is ProductError) {
                   return DefaultWidget(text: state.message);
                 }
-                if (state is ProductSuccess) {
+                if (state is ProductsSuccess) {
                   return GridView.builder(
                     itemCount: state.products.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

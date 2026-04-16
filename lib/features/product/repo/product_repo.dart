@@ -8,6 +8,19 @@ import 'package:shop_app/features/product/data/product.dart';
 class ProductRepository {
   final Dio dio = DioClient.dio;
 
+  Future<Product> fetchSingleProduct(int id) async {
+    try {
+      final response = await dio.get(id.toString());
+      final data = response.data;
+
+      return Product.fromJson(data);
+    } on DioException catch (e) {
+      throw NetworkException(e.message ?? "Network error");
+    } catch (e) {
+      throw ServerException("Unexpected error");
+    }
+  }
+
   Future<List<Product>> fetchProductsByCategory(String slug) async {
     try {
       final response = await dio.get('category/$slug');

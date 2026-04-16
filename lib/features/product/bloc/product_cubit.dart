@@ -10,11 +10,21 @@ class ProductCubit extends Cubit<ProductState> {
 
   ProductCubit(this.repository) : super(ProductInitial());
 
+  Future<void> fetchSingleProduct(int id) async {
+    emit(ProductLoading());
+    try {
+      Product product = await repository.fetchSingleProduct(id);
+      emit(ProductSuccess(product));
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
   Future<void> fetchByCategory(String slug) async {
     emit(ProductLoading());
     try {
       products = await repository.fetchProductsByCategory(slug);
-      emit(ProductSuccess(products));
+      emit(ProductsSuccess(products));
     } catch (e) {
       _handleError(e);
     }
@@ -29,7 +39,7 @@ class ProductCubit extends Cubit<ProductState> {
               (product.title ?? '').toLowerCase().contains(title.toLowerCase()),
         )
         .toList();
-    emit(ProductSuccess(filtered));
+    emit(ProductsSuccess(filtered));
   }
 
   void _handleError(dynamic e) {

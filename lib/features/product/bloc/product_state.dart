@@ -6,9 +6,14 @@ class ProductInitial extends ProductState {}
 
 class ProductLoading extends ProductState {}
 
-class ProductSuccess extends ProductState {
+class ProductsSuccess extends ProductState {
   final List<Product> products;
-  ProductSuccess(this.products);
+  ProductsSuccess(this.products);
+}
+
+class ProductSuccess extends ProductState {
+  final Product product;
+  ProductSuccess(this.product);
 }
 
 class ProductError extends ProductState {

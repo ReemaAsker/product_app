@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen2> {
                   return Center(child: Text(state.message));
                 }
 
-                if (state is ProductSuccess) {
+                if (state is ProductsSuccess) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
 

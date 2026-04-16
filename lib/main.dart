@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/features/cart/bloc/cart_cubit.dart';
 import 'package:shop_app/features/category/bloc/category_cubit.dart';
 import 'package:shop_app/features/home_copy.dart';
 import 'package:shop_app/features/home.dart';
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => CartCubit()),
         BlocProvider(create: (_) => ProductCubit(ProductRepository())),
         BlocProvider(create: (_) => CategoryCubit(ProductRepository())),
       ],
