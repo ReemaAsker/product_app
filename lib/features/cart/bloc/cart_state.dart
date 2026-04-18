@@ -1,12 +1,21 @@
-import '../../product/data/product.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:shop_app/features/product/data/product.dart';
 
-abstract class CartState {}
+part 'cart_state.freezed.dart';
 
-class CartInitial extends CartState {}
+@freezed
+class CartState with _$CartState {
+  const factory CartState.initial() = _Initial;
 
-class CartUpdated extends CartState {
-  final List<Product> products;
-  final double totalPrice;
+  const factory CartState.updated({
+    required List<Product> products,
+    required double totalPrice,
+  }) = _Updated;
 
-  CartUpdated(this.products, this.totalPrice);
+  const factory CartState.loading() = _Loading;
+
+  const factory CartState.checkoutSuccess({required double total}) =
+      _CheckoutSuccess;
+
+  const factory CartState.error({required String message}) = _Error;
 }

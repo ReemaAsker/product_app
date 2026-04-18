@@ -34,10 +34,10 @@ class CustomAppBar extends StatelessWidget {
       actions: [
         BlocBuilder<CartCubit, CartState>(
           builder: (context, state) {
-            int itemCount = 0;
-            if (state is CartUpdated) {
-              itemCount = state.products.length;
-            }
+            final itemCount = state.maybeWhen(
+              updated: (products, _) => products.length,
+              orElse: () => 0,
+            );
 
             return Stack(
               children: [
@@ -52,6 +52,7 @@ class CustomAppBar extends StatelessWidget {
                     );
                   },
                 ),
+
                 if (itemCount > 0)
                   Positioned(
                     right: 6,

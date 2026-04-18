@@ -11,36 +11,115 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Cart"), centerTitle: true),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          BlocBuilder<CartCubit, CartState>(
-            builder: (context, state) {
-              if (state is CartUpdated) {
-                return ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: state.products.length,
-                  separatorBuilder: (context, index) => Divider(),
-                  itemBuilder: (context, index) => ListTile(
-                    leading: Image.network(state.products[index].images![0]),
-                    title: Text(state.products[index].title!),
-                    subtitle: Text("\$${state.products[index].price}"),
-                  ),
-                );
-              }
+      bottomNavigationBar: BlocBuilder<CartCubit, CartState>(
+        builder: (context, state) {
+          return state.maybeWhen(
+            updated: (products, totalPrice) {
+              if (products.isEmpty) return const SizedBox();
 
-              return DefaultWidget(text: "Something went wrong");
+              return Container(
+                width: double.infinity,
+                height: 80,
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                ),
+
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text(
+                          "${totalPrice.toStringAsFixed(2)}\$",
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: TextButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.purple,
+                            ),
+                          ),
+                          onPressed: () {
+                            context.read<CartCubit>().checkout();
+                          },
+                          child: const Text(
+                            "Checkout",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
-          ),
-          TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(Colors.purple),
-            ),
-            onPressed: () {},
-            child: Text("Checkout", style: TextStyle(color: Colors.white)),
-          ),
-        ],
+
+            orElse: () => const SizedBox(),
+          );
+        },
+      ),
+      body: BlocBuilder<CartCubit, CartState>(
+        builder: (context, state) {
+          return state.when(
+            initial: () =>
+                Center(child: DefaultWidget(text: "No items in cart")),
+
+            updated: (products, totalPrice) {
+              return ListView.separated(
+                itemCount: products.length,
+                separatorBuilder: (_, __) => const Divider(),
+                itemBuilder: (context, index) {
+                  final product = products[index];
+
+                  return Dismissible(
+                    key: Key(product.id.toString()),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (_) {
+                      context.read<CartCubit>().removeFromCart(product);
+                    },
+                    background: const SizedBox(),
+                    secondaryBackground: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    child: ListTile(
+                      leading: Image.network(product.images![0]),
+                      title: Text(product.title!),
+                      subtitle: Text("\$${product.price}"),
+                    ),
+                  );
+                },
+              );
+            },
+
+            loading: () => const Center(child: CircularProgressIndicator()),
+
+            checkoutSuccess: (total) =>
+                Center(child: Text("Checkout success! Total: $total")),
+
+            error: (message) => Center(child: Text(message)),
+          );
+        },
       ),
     );
   }

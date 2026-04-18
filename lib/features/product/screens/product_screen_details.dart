@@ -129,11 +129,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                 BlocBuilder<CartCubit, CartState>(
                   builder: (context, state) {
-                    bool isInCart = false;
-
-                    if (state is CartUpdated) {
-                      isInCart = state.products.contains(product);
-                    }
+                    final isInCart = state.maybeWhen(
+                      updated: (products, _) => products.contains(product),
+                      orElse: () => false,
+                    );
 
                     return Container(
                       width: double.infinity,
@@ -144,10 +143,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
                         onPressed: () {
+                          final cubit = context.read<CartCubit>();
+
                           if (isInCart) {
-                            context.read<CartCubit>().removeFromCart(product);
+                            cubit.removeFromCart(product);
                           } else {
-                            context.read<CartCubit>().addToCart(product);
+                            cubit.addToCart(product);
                           }
                         },
                         child: Text(
