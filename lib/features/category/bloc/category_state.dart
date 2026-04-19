@@ -1,15 +1,14 @@
-abstract class CategoryState {}
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CategoryInitial extends CategoryState {}
+part 'category_state.freezed.dart';
 
-class CategoryLoading extends CategoryState {}
+@freezed
+class CategoryState with _$CategoryState {
+  const factory CategoryState.initial() = CategoryInitial;
 
-class CategorySuccess extends CategoryState {
-  final List categories;
-  CategorySuccess(this.categories);
-}
+  const factory CategoryState.loading() = CategoryLoading;
 
-class CategoryError extends CategoryState {
-  final String message;
-  CategoryError(this.message);
+  const factory CategoryState.success(List categories) = CategorySuccess;
+
+  const factory CategoryState.error(String message) = CategoryError;
 }

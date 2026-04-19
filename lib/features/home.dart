@@ -25,29 +25,27 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(12.0),
         child: BlocBuilder<CategoryCubit, CategoryState>(
           builder: (context, state) {
-            if (state is CategoryLoading) {
-              return Center(child: CircularProgressIndicator());
-            }
+            return state.when(
+              initial: () => DefaultWidget(text: "Start loading categories"),
 
-            if (state is CategoryError) {
-              return DefaultWidget(text: state.message);
-            }
+              loading: () => const Center(child: CircularProgressIndicator()),
 
-            if (state is CategorySuccess) {
-              return GridView.builder(
-                itemCount: state.categories.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
-                itemBuilder: (context, index) {
-                  return CategoryCard(category: state.categories[index]);
-                },
-              );
-            }
+              success: (categories) {
+                return GridView.builder(
+                  itemCount: categories.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                  ),
+                  itemBuilder: (context, index) {
+                    return CategoryCard(category: categories[index]);
+                  },
+                );
+              },
 
-            return DefaultWidget(text: "Something went wrong");
+              error: (message) => DefaultWidget(text: message),
+            );
           },
         ),
       ),

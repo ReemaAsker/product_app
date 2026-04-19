@@ -1,22 +1,18 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shop_app/features/product/data/product.dart';
 
-abstract class ProductState {}
+part 'product_state.freezed.dart';
 
-class ProductInitial extends ProductState {}
+@freezed
+class ProductState with _$ProductState {
+  const factory ProductState.initial() = ProductInitial;
 
-class ProductLoading extends ProductState {}
+  const factory ProductState.loading() = ProductLoading;
 
-class ProductsSuccess extends ProductState {
-  final List<Product> products;
-  ProductsSuccess(this.products);
-}
+  const factory ProductState.productsSuccess(List<Product> products) =
+      ProductsSuccess;
 
-class ProductSuccess extends ProductState {
-  final Product product;
-  ProductSuccess(this.product);
-}
+  const factory ProductState.productSuccess(Product product) = ProductSuccess;
 
-class ProductError extends ProductState {
-  final String message;
-  ProductError(this.message);
+  const factory ProductState.error(String message) = ProductError;
 }

@@ -28,7 +28,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
         title: Text("Products of ${widget.categoreySlug}"),
         centerTitle: true,
       ),
-
       body: Column(
         children: [
           Padding(
@@ -36,40 +35,48 @@ class _ProductsScreenState extends State<ProductsScreen> {
             child: TextField(
               onChanged: (value) =>
                   context.read<ProductCubit>().searchOfProducts(value),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.search),
-
                 border: OutlineInputBorder(),
                 hintText: "Search",
               ),
             ),
           ),
-          SizedBox(height: 40),
+
+          const SizedBox(height: 20),
+
           Expanded(
             child: BlocBuilder<ProductCubit, ProductState>(
               builder: (context, state) {
-                if (state is ProductLoading) {
-                  return Center(child: CircularProgressIndicator());
-                }
+                return state.maybeWhen(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
 
-                if (state is ProductError) {
-                  return DefaultWidget(text: state.message);
-                }
-                if (state is ProductsSuccess) {
-                  return GridView.builder(
-                    itemCount: state.products.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                    ),
-                    itemBuilder: (context, index) {
-                      Product product = state.products[index];
-                      return ProductCard(product: product);
-                    },
-                  );
-                }
-                return DefaultWidget(text: "Something went wrong");
+                  productsSuccess: (products) {
+                    if (products.isEmpty) {
+                      return const DefaultWidget(text: "No products found");
+                    }
+
+                    return GridView.builder(
+                      itemCount: products.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
+                      itemBuilder: (context, index) {
+                        final Product product = products[index];
+                        return ProductCard(product: product);
+                      },
+                    );
+                  },
+
+                  error: (message) => DefaultWidget(text: message),
+
+                  orElse: () =>
+                      const DefaultWidget(text: "Something went wrong"),
+                );
               },
             ),
           ),
