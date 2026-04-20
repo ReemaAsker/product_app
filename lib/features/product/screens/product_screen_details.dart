@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/core/hepler.dart';
 import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/cart/bloc/cart_cubit.dart';
 import 'package:shop_app/features/cart/bloc/cart_state.dart';
@@ -51,7 +52,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     color: Colors.grey[100],
                     child: imageUrl == null
                         ? Image.asset(
-                            "assets/fail_product_loading.png",
+                            AppConstatnts.errorImg,
                             fit: BoxFit.contain,
                           )
                         : CustomImageWidget(imgUrl: imageUrl),
@@ -64,17 +65,17 @@ class ProductDetailsScreen extends StatelessWidget {
                         children: [
                           Text(
                             product.title ?? "",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: AppConstatnts.productStyle,
                           ),
 
                           SizedBox(height: 8),
 
                           Row(
                             children: [
-                              Icon(Icons.star, color: Colors.amber),
+                              Icon(
+                                Icons.star,
+                                color: AppConstatnts.primaryColor,
+                              ),
                               SizedBox(width: 4),
                               Text("${product.rating ?? 0}"),
                             ],
@@ -84,11 +85,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                           Text(
                             "\$${product.price}",
-                            style: TextStyle(
-                              fontSize: 22,
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: AppConstatnts.productStyle,
                           ),
 
                           SizedBox(height: 12),
@@ -99,8 +96,8 @@ class ProductDetailsScreen extends StatelessWidget {
                                 : "Out of Stock",
                             style: TextStyle(
                               color: (product.stock ?? 0) > 0
-                                  ? Colors.green
-                                  : Colors.red,
+                                  ? AppConstatnts.secoundryColor
+                                  : AppConstatnts.errorColor,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -119,7 +116,7 @@ class ProductDetailsScreen extends StatelessWidget {
 
                           Text(
                             product.description ?? "",
-                            style: TextStyle(height: 1.5),
+                            // style: TextStyle(height: 1.5),
                           ),
                         ],
                       ),
@@ -139,8 +136,8 @@ class ProductDetailsScreen extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isInCart
-                                ? Colors.red
-                                : Colors.green,
+                                ? AppConstatnts.errorColor
+                                : AppConstatnts.secoundryColor,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
                           onPressed: () {

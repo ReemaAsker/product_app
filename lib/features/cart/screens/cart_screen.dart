@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/core/hepler.dart';
 import 'package:shop_app/core/widgets/custom_image_widget.dart';
 import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/cart/bloc/cart_cubit.dart';
@@ -36,7 +37,7 @@ class CartScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 12.0),
                         child: Text(
                           "${totalPrice.toStringAsFixed(2)}\$",
-                          style: const TextStyle(color: Colors.white),
+                          style: AppConstatnts.whiteText,
                         ),
                       ),
                     ),
@@ -55,15 +56,15 @@ class CartScreen extends StatelessWidget {
                               ),
                             ),
                             backgroundColor: MaterialStateProperty.all(
-                              Colors.purple,
+                              AppConstatnts.secoundryColor,
                             ),
                           ),
                           onPressed: () {
                             context.read<CartCubit>().checkout();
                           },
-                          child: const Text(
+                          child: Text(
                             "Checkout",
-                            style: TextStyle(color: Colors.white),
+                            style: AppConstatnts.whiteText,
                           ),
                         ),
                       ),
@@ -103,7 +104,7 @@ class CartScreen extends StatelessWidget {
                     },
                     background: const SizedBox(),
                     secondaryBackground: Container(
-                      color: Colors.red,
+                      color: AppConstatnts.errorColor,
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: const Icon(Icons.delete, color: Colors.white),
@@ -112,7 +113,7 @@ class CartScreen extends StatelessWidget {
                     child: ListTile(
                       leading: imageUrl == null
                           ? Image.asset(
-                              "assets/fail_product_loading.png",
+                              AppConstatnts.loadingImg,
                               fit: BoxFit.contain,
                             )
                           : CustomImageWidget(imgUrl: imageUrl),
@@ -124,7 +125,7 @@ class CartScreen extends StatelessWidget {
               );
             },
 
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => Center(child: Image.asset(AppConstatnts.loadingImg)),
 
             checkoutSuccess: (total) =>
                 Center(child: Text("Checkout success! Total: $total")),

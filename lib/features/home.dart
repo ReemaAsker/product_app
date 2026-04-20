@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/core/hepler.dart';
 import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/category/bloc/category_cubit.dart';
 import 'package:shop_app/features/category/bloc/category_state.dart';
@@ -22,7 +23,8 @@ class HomeScreen extends StatelessWidget {
               return state.when(
                 initial: () => DefaultWidget(text: "Start loading categories"),
 
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () =>
+                    Center(child: Image.asset(AppConstatnts.loadingImg)),
 
                 success: (categories) {
                   return GridView.builder(

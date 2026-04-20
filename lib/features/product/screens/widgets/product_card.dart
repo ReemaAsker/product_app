@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/core/hepler.dart';
 import 'package:shop_app/features/product/data/product.dart';
 import 'package:shop_app/features/product/screens/product_screen_details.dart';
 import 'package:shop_app/core/widgets/custom_image_widget.dart';
@@ -34,7 +35,7 @@ class ProductCard extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: const Color(0xFFF4B755),
+            color: AppConstatnts.lightPrimaryColor,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -51,11 +52,10 @@ class ProductCard extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    /// IMAGE
                     Expanded(
                       child: imageUrl == null
                           ? Image.asset(
-                              "assets/fail_product_loading.png",
+                              AppConstatnts.loadingImg,
                               fit: BoxFit.contain,
                             )
                           : CustomImageWidget(imgUrl: imageUrl),
@@ -83,7 +83,7 @@ class ProductCard extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.orange,
+                    color: AppConstatnts.primaryColor,
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(16),
                       bottomLeft: Radius.circular(12),
@@ -91,7 +91,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Text(
                     "${(product.price ?? 0).toStringAsFixed(2)} \$",
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    style: AppConstatnts.whiteText,
                   ),
                 ),
               ),
@@ -104,8 +104,8 @@ class ProductCard extends StatelessWidget {
                     horizontal: 10,
                     vertical: 6,
                   ),
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
+                  decoration: BoxDecoration(
+                    color: AppConstatnts.secoundryColor,
                     borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(16),
                       topLeft: Radius.circular(16),
@@ -113,7 +113,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Text(
                     product.availabilityStatus ?? "Unknown",
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    style: AppConstatnts.whiteText,
                   ),
                 ),
               ),

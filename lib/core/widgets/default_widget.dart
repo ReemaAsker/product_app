@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/core/hepler.dart';
 
 class DefaultWidget extends StatelessWidget {
   final String text;
@@ -10,10 +11,7 @@ class DefaultWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          text,
-          style: TextStyle(letterSpacing: 2, color: Colors.deepOrange),
-        ),
+        Text(text, style: AppConstatnts.defaultStyle),
         SizedBox(height: 20),
         Navigator.canPop(context)
             ? ElevatedButton(
