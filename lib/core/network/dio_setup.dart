@@ -11,32 +11,22 @@ class DioClient {
   );
 }
 
-AppException handleDioError(DioException e) {
-  switch (e.type) {
-    case DioExceptionType.connectionTimeout:
-    case DioExceptionType.receiveTimeout:
-      return TimeoutException();
-
-    case DioExceptionType.badResponse:
-      switch (e.response?.statusCode) {
-        case 400:
-          return BadRequestException();
-        case 401:
-          return UnauthorizedException();
-        case 403:
-          return ForbiddenException();
-        case 404:
-          return NotFoundException();
-        case 500:
-          return InternalServerErrorException();
-        default:
-          return ServerException("Server error", code: e.response?.statusCode);
-      }
-
-    case DioExceptionType.unknown:
-      return NoInternetException();
-
+AppException mapDioError(DioException e) {
+  switch (e.response?.statusCode) {
+    case 400:
+      return const BadRequestException();
+    case 401:
+      return const UnauthorizedException();
+    case 403:
+      return const ForbiddenException();
+    case 404:
+      return const NotFoundException();
+    case 500:
+      return const InternalServerErrorException();
     default:
-      return NetworkException("Unexpected network error");
+      return const ServerException(
+        message: "Unknown error",
+        userMessage: "Something went wrong",
+      );
   }
 }

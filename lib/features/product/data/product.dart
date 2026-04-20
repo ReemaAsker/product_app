@@ -1,5 +1,12 @@
 import 'package:equatable/equatable.dart';
 
+double? toDouble(dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value.toDouble();
+  if (value is double) return value;
+  return double.tryParse(value.toString());
+}
+
 class Products {
   List<Product>? products;
   int? total;
@@ -85,15 +92,20 @@ class Product extends Equatable {
     id = json['id'];
     title = json['title'];
     description = json['description'];
+
     category = json['category'];
-    price = json['price'];
-    discountPercentage = json['discountPercentage'];
-    rating = json['rating'];
+    price = toDouble(json['price']);
+    discountPercentage = toDouble(json['discountPercentage']);
+
+    rating = toDouble(json['rating']);
+
     stock = json['stock'];
+
     tags = json['tags'].cast<String>();
     brand = json['brand'];
     sku = json['sku'];
     weight = json['weight'];
+
     dimensions = json['dimensions'] != null
         ? Dimensions.fromJson(json['dimensions'])
         : null;
@@ -158,9 +170,9 @@ class Dimensions {
   Dimensions({this.width, this.height, this.depth});
 
   Dimensions.fromJson(Map<String, dynamic> json) {
-    width = json['width'];
-    height = json['height'];
-    depth = json['depth'];
+    width = toDouble(json['width']);
+    height = toDouble(json['height']);
+    depth = toDouble(json['depth']);
   }
 
   Map<String, dynamic> toJson() {

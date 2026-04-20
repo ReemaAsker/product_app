@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:shop_app/features/product/data/product.dart';
+import 'package:shop_app/features/cart/data/cartItem.dart';
 
 part 'cart_state.freezed.dart';
 
@@ -8,7 +8,7 @@ class CartState with _$CartState {
   const factory CartState.initial() = _Initial;
 
   const factory CartState.updated({
-    required List<Product> products,
+    required List<CartItemModel> items,
     required double totalPrice,
   }) = _Updated;
 

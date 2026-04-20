@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/core/hepler.dart';
 import 'package:shop_app/features/category/data/category.dart';
 import 'package:shop_app/features/product/screens/products_screen.dart';
 
@@ -22,7 +23,7 @@ class CategoryCard extends StatelessWidget {
         width: 100,
 
         decoration: BoxDecoration(
-          color: Colors.orange.shade50,
+          color: AppConstatnts.lightPrimaryColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -35,16 +36,9 @@ class CategoryCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.category, size: 40, color: Colors.orange),
+            Icon(Icons.category, size: 40, color: AppConstatnts.secoundryColor),
             SizedBox(height: 10),
-            Text(
-              category.name,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            Text(category.name, style: AppConstatnts.defaultStyle),
           ],
         ),
       ),

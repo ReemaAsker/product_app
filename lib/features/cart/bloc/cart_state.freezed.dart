@@ -131,11 +131,11 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( List<Product> products,  double totalPrice)?  updated,TResult Function()?  loading,TResult Function( double total)?  checkoutSuccess,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( List<CartItemModel> items,  double totalPrice)?  updated,TResult Function()?  loading,TResult Function( double total)?  checkoutSuccess,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Updated() when updated != null:
-return updated(_that.products,_that.totalPrice);case _Loading() when loading != null:
+return updated(_that.items,_that.totalPrice);case _Loading() when loading != null:
 return loading();case _CheckoutSuccess() when checkoutSuccess != null:
 return checkoutSuccess(_that.total);case _Error() when error != null:
 return error(_that.message);case _:
@@ -156,11 +156,11 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( List<Product> products,  double totalPrice)  updated,required TResult Function()  loading,required TResult Function( double total)  checkoutSuccess,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( List<CartItemModel> items,  double totalPrice)  updated,required TResult Function()  loading,required TResult Function( double total)  checkoutSuccess,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Updated():
-return updated(_that.products,_that.totalPrice);case _Loading():
+return updated(_that.items,_that.totalPrice);case _Loading():
 return loading();case _CheckoutSuccess():
 return checkoutSuccess(_that.total);case _Error():
 return error(_that.message);case _:
@@ -180,11 +180,11 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( List<Product> products,  double totalPrice)?  updated,TResult? Function()?  loading,TResult? Function( double total)?  checkoutSuccess,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( List<CartItemModel> items,  double totalPrice)?  updated,TResult? Function()?  loading,TResult? Function( double total)?  checkoutSuccess,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Updated() when updated != null:
-return updated(_that.products,_that.totalPrice);case _Loading() when loading != null:
+return updated(_that.items,_that.totalPrice);case _Loading() when loading != null:
 return loading();case _CheckoutSuccess() when checkoutSuccess != null:
 return checkoutSuccess(_that.total);case _Error() when error != null:
 return error(_that.message);case _:
@@ -231,14 +231,14 @@ String toString() {
 
 
 class _Updated implements CartState {
-  const _Updated({required final  List<Product> products, required this.totalPrice}): _products = products;
+  const _Updated({required final  List<CartItemModel> items, required this.totalPrice}): _items = items;
   
 
- final  List<Product> _products;
- List<Product> get products {
-  if (_products is EqualUnmodifiableListView) return _products;
+ final  List<CartItemModel> _items;
+ List<CartItemModel> get items {
+  if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_products);
+  return EqualUnmodifiableListView(_items);
 }
 
  final  double totalPrice;
@@ -253,16 +253,16 @@ _$UpdatedCopyWith<_Updated> get copyWith => __$UpdatedCopyWithImpl<_Updated>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Updated&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Updated&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_products),totalPrice);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),totalPrice);
 
 @override
 String toString() {
-  return 'CartState.updated(products: $products, totalPrice: $totalPrice)';
+  return 'CartState.updated(items: $items, totalPrice: $totalPrice)';
 }
 
 
@@ -273,7 +273,7 @@ abstract mixin class _$UpdatedCopyWith<$Res> implements $CartStateCopyWith<$Res>
   factory _$UpdatedCopyWith(_Updated value, $Res Function(_Updated) _then) = __$UpdatedCopyWithImpl;
 @useResult
 $Res call({
- List<Product> products, double totalPrice
+ List<CartItemModel> items, double totalPrice
 });
 
 
@@ -290,10 +290,10 @@ class __$UpdatedCopyWithImpl<$Res>
 
 /// Create a copy of CartState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? products = null,Object? totalPrice = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? items = null,Object? totalPrice = null,}) {
   return _then(_Updated(
-products: null == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
-as List<Product>,totalPrice: null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
+items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<CartItemModel>,totalPrice: null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
