@@ -4,83 +4,83 @@ import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/product/bloc/product_cubit.dart';
 import 'package:shop_app/features/product/bloc/product_state.dart';
 import 'package:shop_app/features/product/data/product.dart';
+import 'package:shop_app/features/product/repo/product_repo.dart';
 import 'package:shop_app/features/product/screens/widgets/product_card.dart';
 
-class ProductsScreen extends StatefulWidget {
+class ProductsScreen extends StatelessWidget {
   final String categoreySlug;
   const ProductsScreen({super.key, required this.categoreySlug});
 
   @override
-  State<ProductsScreen> createState() => _ProductsScreenState();
-}
-
-class _ProductsScreenState extends State<ProductsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<ProductCubit>().fetchByCategory(widget.categoreySlug);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Products of ${widget.categoreySlug}"),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-            child: TextField(
-              onChanged: (value) =>
-                  context.read<ProductCubit>().searchOfProducts(value),
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-                hintText: "Search",
+    return BlocProvider(
+      create: (context) =>
+          ProductCubit(ProductRepository())..fetchByCategory(categoreySlug),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Products of $categoreySlug"),
+          centerTitle: true,
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 12,
+              ),
+              child: TextField(
+                onChanged: (value) =>
+                    context.read<ProductCubit>().searchOfProducts(value),
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                  hintText: "Search",
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          Expanded(
-            child: BlocBuilder<ProductCubit, ProductState>(
-              builder: (context, state) {
-                return state.maybeWhen(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+            Expanded(
+              child: BlocBuilder<ProductCubit, ProductState>(
+                buildWhen: (previous, current) => previous != current,
 
-                  productsSuccess: (products) {
-                    if (products.isEmpty) {
-                      return const DefaultWidget(text: "No products found");
-                    }
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
 
-                    return GridView.builder(
-                      itemCount: products.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                          ),
-                      itemBuilder: (context, index) {
-                        final Product product = products[index];
-                        return ProductCard(product: product);
-                      },
-                    );
-                  },
+                    productsSuccess: (products) {
+                      if (products.isEmpty) {
+                        return const DefaultWidget(text: "No products found");
+                      }
 
-                  error: (message) => DefaultWidget(text: message),
+                      return GridView.builder(
+                        cacheExtent: 500,
+                        itemCount: products.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                            ),
+                        itemBuilder: (context, index) {
+                          final Product product = products[index];
+                          return ProductCard(product: product);
+                        },
+                      );
+                    },
 
-                  orElse: () =>
-                      const DefaultWidget(text: "Something went wrong"),
-                );
-              },
+                    error: (message) => DefaultWidget(text: message),
+
+                    orElse: () =>
+                        const DefaultWidget(text: "Something went wrong"),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

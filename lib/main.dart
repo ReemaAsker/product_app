@@ -14,12 +14,8 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => CartCubit()),
-        BlocProvider(create: (_) => ProductCubit(ProductRepository())),
-        BlocProvider(create: (_) => CategoryCubit(ProductRepository())),
-      ],
+    return BlocProvider(
+      create: (_) => CartCubit(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         // home: HomeScreen2(),

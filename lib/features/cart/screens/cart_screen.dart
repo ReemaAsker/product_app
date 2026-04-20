@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/core/widgets/custom_image_widget.dart';
 import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/cart/bloc/cart_cubit.dart';
 import 'package:shop_app/features/cart/bloc/cart_state.dart';
@@ -88,6 +89,11 @@ class CartScreen extends StatelessWidget {
                 separatorBuilder: (_, __) => const Divider(),
                 itemBuilder: (context, index) {
                   final product = products[index];
+                  final imageUrl =
+                      product.thumbnail ??
+                      (product.images?.isNotEmpty == true
+                          ? product.images!.first
+                          : null);
 
                   return Dismissible(
                     key: Key(product.id.toString()),
@@ -102,8 +108,14 @@ class CartScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: const Icon(Icons.delete, color: Colors.white),
                     ),
+
                     child: ListTile(
-                      leading: Image.network(product.images![0]),
+                      leading: imageUrl == null
+                          ? Image.asset(
+                              "assets/fail_product_loading.png",
+                              fit: BoxFit.contain,
+                            )
+                          : CustomImageWidget(imgUrl: imageUrl),
                       title: Text(product.title!),
                       subtitle: Text("\$${product.price}"),
                     ),
