@@ -16,7 +16,7 @@ class CustomAppBar extends StatelessWidget {
       title: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, state) {
           state.maybeWhen(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => Center(child: Image.asset(AppConstatnts.loadingImg)),
             error: (message) => Center(child: Text(message)),
             productSuccess: (product) => Text(product.title ?? ""),
             orElse: () => Text(""),

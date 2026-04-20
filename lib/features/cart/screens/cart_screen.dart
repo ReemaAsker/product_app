@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/core/hepler.dart';
-import 'package:shop_app/core/widgets/custom_image_widget.dart';
 import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/cart/bloc/cart_cubit.dart';
 import 'package:shop_app/features/cart/bloc/cart_state.dart';
+import 'package:shop_app/features/cart/screens/widgets/cart_item.dart';
+import 'package:shop_app/features/cart/screens/widgets/custom_bottom_nav_bar.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -13,71 +14,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Cart"), centerTitle: true),
-      bottomNavigationBar: BlocBuilder<CartCubit, CartState>(
-        builder: (context, state) {
-          return state.maybeWhen(
-            updated: (products, totalPrice) {
-              if (products.isEmpty) return const SizedBox();
-
-              return Container(
-                width: double.infinity,
-                height: 80,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                  ),
-                ),
-
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 12.0),
-                        child: Text(
-                          "${totalPrice.toStringAsFixed(2)}\$",
-                          style: AppConstatnts.whiteText,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: TextButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            backgroundColor: MaterialStateProperty.all(
-                              AppConstatnts.secoundryColor,
-                            ),
-                          ),
-                          onPressed: () {
-                            context.read<CartCubit>().checkout();
-                          },
-                          child: Text(
-                            "Checkout",
-                            style: AppConstatnts.whiteText,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-
-            orElse: () => const SizedBox(),
-          );
-        },
-      ),
+      bottomNavigationBar: CustomBottomNavBar(),
       body: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
           return state.when(
@@ -96,31 +33,7 @@ class CartScreen extends StatelessWidget {
                           ? product.images!.first
                           : null);
 
-                  return Dismissible(
-                    key: Key(product.id.toString()),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (_) {
-                      context.read<CartCubit>().removeFromCart(product);
-                    },
-                    background: const SizedBox(),
-                    secondaryBackground: Container(
-                      color: AppConstatnts.errorColor,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Icon(Icons.delete, color: Colors.white),
-                    ),
-
-                    child: ListTile(
-                      leading: imageUrl == null
-                          ? Image.asset(
-                              AppConstatnts.loadingImg,
-                              fit: BoxFit.contain,
-                            )
-                          : CustomImageWidget(imgUrl: imageUrl),
-                      title: Text(product.title!),
-                      subtitle: Text("\$${product.price}"),
-                    ),
-                  );
+                  return CartItem(product: product, img: imageUrl);
                 },
               );
             },

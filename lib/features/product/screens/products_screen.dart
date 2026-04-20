@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shop_app/core/hepler.dart';
 import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/product/bloc/product_cubit.dart';
 import 'package:shop_app/features/product/bloc/product_state.dart';
 import 'package:shop_app/features/product/data/product.dart';
 import 'package:shop_app/features/product/repo/product_repo.dart';
 import 'package:shop_app/features/product/screens/widgets/product_card.dart';
+import 'package:shop_app/features/product/screens/widgets/search_widget.dart';
 
 class ProductsScreen extends StatelessWidget {
   final String categoreySlug;
@@ -23,22 +25,7 @@ class ProductsScreen extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 12,
-              ),
-              child: TextField(
-                onChanged: (value) =>
-                    context.read<ProductCubit>().searchOfProducts(value),
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(),
-                  hintText: "Search",
-                ),
-              ),
-            ),
-
+            SearchWidget(),
             const SizedBox(height: 20),
 
             Expanded(
@@ -48,7 +35,7 @@ class ProductsScreen extends StatelessWidget {
                 builder: (context, state) {
                   return state.maybeWhen(
                     loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                        Center(child: Image.asset(AppConstatnts.loadingImg)),
 
                     productsSuccess: (products) {
                       if (products.isEmpty) {
