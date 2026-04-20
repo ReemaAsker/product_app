@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/core/hepler.dart';
 import 'package:shop_app/core/widgets/counter_widget.dart';
 import 'package:shop_app/core/widgets/default_widget.dart';
+import 'package:shop_app/features/cart/bloc/cart_cubit.dart';
 import 'package:shop_app/features/product/bloc/product_cubit.dart';
 import 'package:shop_app/features/product/bloc/product_state.dart';
 import 'package:shop_app/features/product/repo/product_repo.dart';
@@ -145,21 +146,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                     ),
 
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: AddToCartButton(product: product),
-                        ),
-                        Expanded(
-                          child: CounterWidget(
-                            value: 1,
-                            onDecrement: () => {},
-                            onIncrement: () {},
-                          ),
-                        ),
-                      ],
-                    ),
+                    AddToCartButton(product: product),
                   ],
                 );
               },

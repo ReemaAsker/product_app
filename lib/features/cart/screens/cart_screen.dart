@@ -4,8 +4,9 @@ import 'package:shop_app/core/hepler.dart';
 import 'package:shop_app/core/widgets/default_widget.dart';
 import 'package:shop_app/features/cart/bloc/cart_cubit.dart';
 import 'package:shop_app/features/cart/bloc/cart_state.dart';
-import 'package:shop_app/features/cart/screens/widgets/cart_item.dart';
-import 'package:shop_app/features/cart/screens/widgets/custom_bottom_nav_bar.dart';
+
+import 'widgets/cart_item_card.dart';
+import 'widgets/total_chekout_widget.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -13,37 +14,49 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Cart"), centerTitle: true),
-      bottomNavigationBar: CustomBottomNavBar(),
+      appBar: AppBar(title: const Text("My Cart"), centerTitle: true),
+
       body: BlocBuilder<CartCubit, CartState>(
         builder: (context, state) {
-          return state.when(
+          return state.maybeWhen(
             initial: () =>
-                Center(child: DefaultWidget(text: "No items in cart")),
+                const Center(child: DefaultWidget(text: "Your cart is empty")),
 
-            updated: (products, totalPrice) {
-              return ListView.separated(
-                itemCount: products.length,
-                separatorBuilder: (_, __) => const Divider(),
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  final imageUrl =
-                      product.thumbnail ??
-                      (product.images?.isNotEmpty == true
-                          ? product.images!.first
-                          : null);
+            loading: () =>
+                Center(child: Image.asset(AppConstatnts.loadingImg, width: 80)),
 
-                  return CartItem(product: product, img: imageUrl);
-                },
+            checkoutSuccess: (total) => Center(
+              child: Text(
+                "Checkout Success\nTotal: \$${total.toStringAsFixed(2)}",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+              ),
+            ),
+
+            updated: (items, totalPrice) {
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(12),
+                      itemCount: items.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+
+                      itemBuilder: (context, index) {
+                        final item = items[index];
+                        return CartItemCard(item: item);
+                      },
+                    ),
+                  ),
+
+                  TotalChekoutWidget(total: totalPrice),
+                ],
               );
             },
 
-            loading: () => Center(child: Image.asset(AppConstatnts.loadingImg)),
+            error: (msg) => Center(child: Text(msg)),
 
-            checkoutSuccess: (total) =>
-                Center(child: Text("Checkout success! Total: $total")),
-
-            error: (message) => Center(child: Text(message)),
+            orElse: () => const DefaultWidget(text: "Something went wrong"),
           );
         },
       ),
