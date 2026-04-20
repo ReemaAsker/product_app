@@ -1,28 +1,60 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/features/cart/data/cartItem.dart';
 import 'package:shop_app/features/product/data/product.dart';
+import '../repo/cart_local_storage.dart';
 import 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
-  CartCubit() : super(const CartState.initial());
+  CartCubit() : super(const CartState.initial()) {
+    _loadCart();
+  }
 
+  final CartLocalStorage storage = CartLocalStorage();
   final List<CartItemModel> _items = [];
 
-  CartState _emitUpdated() {
-    final total = _items.fold<double>(
+  // =========================
+  // LOAD CART
+  // =========================
+  Future<void> _loadCart() async {
+    final items = await storage.getCart();
+
+    _items
+      ..clear()
+      ..addAll(items);
+
+    _emitUpdated();
+  }
+
+  // =========================
+  // CALCULATE TOTAL
+  // =========================
+  double _calculateTotal() {
+    return _items.fold(
       0,
       (sum, item) => sum + (item.product.price ?? 0) * item.quantity,
     );
-
-    final newState = CartState.updated(
-      items: List.unmodifiable(_items),
-      totalPrice: total,
-    );
-
-    emit(newState);
-    return newState;
   }
 
+  // =========================
+  // EMIT + SAVE
+  // =========================
+  void _emitUpdated() {
+    final state = CartState.updated(
+      items: List.unmodifiable(_items),
+      totalPrice: _calculateTotal(),
+    );
+
+    emit(state);
+    _save();
+  }
+
+  Future<void> _save() async {
+    await storage.saveCart(_items);
+  }
+
+  // =========================
+  // ADD
+  // =========================
   void addToCart(Product product) {
     final index = _items.indexWhere((e) => e.product.id == product.id);
 
@@ -37,6 +69,9 @@ class CartCubit extends Cubit<CartState> {
     _emitUpdated();
   }
 
+  // =========================
+  // REMOVE (decrease)
+  // =========================
   void removeFromCart(Product product) {
     final index = _items.indexWhere((e) => e.product.id == product.id);
 
@@ -53,17 +88,27 @@ class CartCubit extends Cubit<CartState> {
     _items.isEmpty ? emit(const CartState.initial()) : _emitUpdated();
   }
 
+  // =========================
+  // DELETE ITEM
+  // =========================
   void deleteItem(Product product) {
     _items.removeWhere((e) => e.product.id == product.id);
 
     _items.isEmpty ? emit(const CartState.initial()) : _emitUpdated();
   }
 
+  // =========================
+  // CLEAR CART
+  // =========================
   void clearCart() {
     _items.clear();
     emit(const CartState.initial());
+    storage.clearCart(); // 🔥 important
   }
 
+  // =========================
+  // CHECKOUT
+  // =========================
   Future<void> checkout() async {
     if (_items.isEmpty) return;
 
@@ -72,26 +117,25 @@ class CartCubit extends Cubit<CartState> {
 
       await Future.delayed(const Duration(seconds: 2));
 
-      final total = _items.fold<double>(
-        0,
-        (sum, item) => sum + (item.product.price ?? 0) * item.quantity,
-      );
+      final total = _calculateTotal();
 
       emit(CartState.checkoutSuccess(total: total));
 
       _items.clear();
       emit(const CartState.initial());
+
+      await storage.clearCart();
     } catch (_) {
       emit(const CartState.error(message: "Checkout failed"));
     }
   }
 
+  // =========================
+  // HELPERS
+  // =========================
   int getQuantity(Product product) {
-    final item = _items.firstWhere(
-      (e) => e.product.id == product.id,
-      orElse: () => CartItemModel(product: product, quantity: 0),
-    );
-    return item.quantity;
+    final item = _items.where((e) => e.product.id == product.id).firstOrNull;
+    return item?.quantity ?? 0;
   }
 
   bool isInCart(Product product) {

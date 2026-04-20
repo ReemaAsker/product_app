@@ -13,7 +13,8 @@ class ProductRepository {
       return Product.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleDioError(e);
-    } catch (_) {
+    } catch (e) {
+      print(e.toString());
       throw const ParsingException();
     }
   }
@@ -23,7 +24,7 @@ class ProductRepository {
       final response = await dio.get('category/$slug');
 
       final data = response.data['products'];
-
+      print(response.data['products']);
       if (data is! List) {
         throw const ParsingException();
       }
@@ -31,7 +32,8 @@ class ProductRepository {
       return data.map<Product>((e) => Product.fromJson(e)).toList();
     } on DioException catch (e) {
       throw _handleDioError(e);
-    } catch (_) {
+    } catch (e) {
+      print(e.toString());
       throw const ParsingException();
     }
   }
@@ -49,7 +51,8 @@ class ProductRepository {
       return data.map<Product>((e) => Product.fromJson(e)).toList();
     } on DioException catch (e) {
       throw _handleDioError(e);
-    } catch (_) {
+    } catch (e) {
+      print(e.toString());
       throw const ParsingException();
     }
   }
@@ -65,7 +68,8 @@ class ProductRepository {
       return (response.data as List).map((e) => Category.fromJson(e)).toList();
     } on DioException catch (e) {
       throw _handleDioError(e);
-    } catch (_) {
+    } catch (e) {
+      print(e.toString());
       throw const ParsingException();
     }
   }

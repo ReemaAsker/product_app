@@ -17,7 +17,7 @@ class ProductStock extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        stock > 0 ? "In Stock (${stock})" : "Out of Stock",
+        stock > 0 ? " (${stock})" : "Out of Stock",
         style: TextStyle(
           color: stock > 0
               ? AppConstatnts.secoundryColor

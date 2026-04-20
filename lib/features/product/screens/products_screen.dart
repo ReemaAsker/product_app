@@ -42,19 +42,28 @@ class ProductsScreen extends StatelessWidget {
                         return const DefaultWidget(text: "No products found");
                       }
 
-                      return GridView.builder(
-                        cacheExtent: 500,
-                        itemCount: products.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                            ),
-                        itemBuilder: (context, index) {
-                          final Product product = products[index];
-                          return ProductCard(product: product);
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          await context.read<ProductCubit>().fetchByCategory(
+                            categoreySlug,
+                          );
                         },
+
+                        child: GridView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          cacheExtent: 500,
+                          itemCount: products.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                              ),
+                          itemBuilder: (context, index) {
+                            final Product product = products[index];
+                            return ProductCard(product: product);
+                          },
+                        ),
                       );
                     },
 

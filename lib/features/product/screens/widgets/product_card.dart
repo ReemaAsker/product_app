@@ -33,94 +33,110 @@ class ProductCard extends StatelessWidget {
               },
 
         child: Container(
-          margin: EdgeInsets.all(12),
+          margin: const EdgeInsets.symmetric(horizontal: 6),
           decoration: BoxDecoration(
             color: AppConstatnts.lightPrimaryColor,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
-                blurRadius: 6,
-                offset: const Offset(0, 3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: imageUrl == null
+                              ? Image.asset(
+                                  AppConstatnts.loadingImg,
+                                  fit: BoxFit.contain,
+                                )
+                              : CustomImageWidget(imgUrl: imageUrl),
+                        ),
+                      ),
 
-          child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: imageUrl == null
-                          ? Image.asset(
-                              AppConstatnts.loadingImg,
-                              fit: BoxFit.contain,
-                            )
-                          : CustomImageWidget(imgUrl: imageUrl),
-                    ),
+                      const SizedBox(height: 10),
 
-                    const SizedBox(height: 8),
-
-                    Text(
-                      product.title ?? "No title",
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          product.title ?? "No title",
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  decoration: BoxDecoration(
+                ),
+
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: _Badge(
                     color: AppConstatnts.primaryColor,
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(16),
                       bottomLeft: Radius.circular(12),
                     ),
-                  ),
-                  child: Text(
-                    "${(product.price ?? 0).toStringAsFixed(2)} \$",
-                    style: AppConstatnts.whiteText,
+                    text: "${(product.price ?? 0).toStringAsFixed(2)} \$",
                   ),
                 ),
-              ),
 
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  child: _Badge(
                     color: AppConstatnts.secoundryColor,
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(16),
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
                     ),
-                  ),
-                  child: Text(
-                    product.availabilityStatus ?? "Unknown",
-                    style: AppConstatnts.whiteText,
+                    text: product.availabilityStatus ?? "Unknown",
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _Badge extends StatelessWidget {
+  final Color color;
+  final BorderRadius borderRadius;
+  final String text;
+
+  const _Badge({
+    required this.color,
+    required this.borderRadius,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(color: color, borderRadius: borderRadius),
+      child: Text(text, style: AppConstatnts.whiteText),
     );
   }
 }
